@@ -22,18 +22,18 @@
 | **Maces** | TrainingWand | 1 | 5 | 312 |
 | **Maces** | WarHammer | 29 | 47 | 618 |
 | **Maces** | WarMace | 14 | 30 | 420 |
-| **ML Weapons** | AssassinSpike | 10 | 12 | 50 |
-| **ML Weapons** | DiamondMace | 14 | 17 | 37 |
-| **ML Weapons** | ElvenCompositeLongbow | 12 | 16 | 27 |
-| **ML Weapons** | ElvenMachete | 13 | 15 | 41 |
-| **ML Weapons** | ElvenSpellblade | 12 | 14 | 44 |
-| **ML Weapons** | Leafblade | 13 | 15 | 42 |
-| **ML Weapons** | MagicalShortbow | 9 | 13 | 38 |
-| **ML Weapons** | OrnateAxe | 18 | 20 | 26 |
-| **ML Weapons** | RadiantScimitar | 12 | 14 | 43 |
-| **ML Weapons** | RuneBlade | 15 | 17 | 35 |
-| **ML Weapons** | WarCleaver | 9 | 11 | 48 |
-| **ML Weapons** | WildStaff | 10 | 12 | 48 |
+| **ML Weapons** | AssassinSpike | 8 | 12 | 250 |
+| **ML Weapons** | DiamondMace | 13 | 21 | 380 |
+| **ML Weapons** | ElvenCompositeLongbow | 16 | 27 | 450 |
+| **ML Weapons** | ElvenMachete | 13 | 20 | 330 |
+| **ML Weapons** | ElvenSpellblade | 12 | 20 | 340 |
+| **ML Weapons** | Leafblade | 11 | 17 | 310 |
+| **ML Weapons** | MagicalShortbow | 12 | 18 | 320 |
+| **ML Weapons** | OrnateAxe | 18 | 29 | 380 |
+| **ML Weapons** | RadiantScimitar | 13 | 21 | 340 |
+| **ML Weapons** | RuneBlade | 15 | 26 | 400 |
+| **ML Weapons** | WarCleaver | 10 | 14 | 280 |
+| **ML Weapons** | WildStaff | 14 | 25 | 390 |
 | **PoleArms** | Bardiche | 19 | 48 | 516 |
 | **PoleArms** | Halberd | 20 | 57 | 616 |
 | **PoleArms** | Scythe | 25 | 39 | 475 |
@@ -43,18 +43,18 @@
 | **Ranged** | ElvenBow | 15 | 21 | 265 |
 | **Ranged** | HeavyCrossbow | 27 | 39 | 683 |
 | **Ranged** | RepeatingCrossbow | 10 | 12 | 356 |
-| **SE Weapons** | Bokuto | 9 | 11 | 298 |
-| **SE Weapons** | Daisho | 13 | 15 | 362 |
-| **SE Weapons** | Kama | 9 | 11 | 290 |
-| **SE Weapons** | Lajatang | 16 | 18 | 290 |
-| **SE Weapons** | NoDachi | 16 | 18 | 400 |
-| **SE Weapons** | Nunchaku | 11 | 13 | 323 |
-| **SE Weapons** | Sai | 9 | 11 | 290 |
-| **SE Weapons** | Tekagi | 10 | 12 | 298 |
-| **SE Weapons** | Tessen | 10 | 12 | 310 |
-| **SE Weapons** | Tetsubo | 12 | 14 | 333 |
-| **SE Weapons** | Wakizashi | 11 | 13 | 338 |
-| **SE Weapons** | Yumi | 18 | 20 | 520 |
+| **SE Weapons** | Bokuto | 10 | 14 | 298 |
+| **SE Weapons** | Daisho | 13 | 20 | 362 |
+| **SE Weapons** | Kama | 11 | 15 | 290 |
+| **SE Weapons** | Lajatang | 14 | 18 | 290 |
+| **SE Weapons** | NoDachi | 18 | 25 | 400 |
+| **SE Weapons** | Nunchaku | 12 | 16 | 323 |
+| **SE Weapons** | Sai | 10 | 14 | 290 |
+| **SE Weapons** | Tekagi | 11 | 15 | 298 |
+| **SE Weapons** | Tessen | 11 | 15 | 310 |
+| **SE Weapons** | Tetsubo | 13 | 17 | 333 |
+| **SE Weapons** | Wakizashi | 12 | 18 | 338 |
+| **SE Weapons** | Yumi | 20 | 28 | 520 |
 | **SpearsAndForks** | BladedStaff | 14 | 16 | 383 |
 | **SpearsAndForks** | DoubleBladedStaff | 12 | 13 | 314 |
 | **SpearsAndForks** | Pike | 14 | 16 | 383 |
