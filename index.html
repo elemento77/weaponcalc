@@ -617,8 +617,10 @@
         <div class="card">
             <div class="card-title">Arma</div>
             <div class="form-group full">
-                <label>Selecione a arma</label>
-                <select id="weaponSelect"></select>
+                <label>Buscar arma</label>
+                <input type="text" id="weaponSearch" placeholder="🔍 Digite para buscar... (ex: Halberd, Katana, Bow)"
+                    autocomplete="off" style="margin-bottom:8px">
+                <select id="weaponSelect" size="1"></select>
             </div>
             <div class="weapon-info" id="weaponInfo" style="display:none">
                 <div class="weapon-stat"><span class="weapon-stat-val" id="wMin">-</span><span
@@ -908,6 +910,47 @@
             document.getElementById('accuracyLevel').addEventListener('change', updateWeaponInfo);
             document.getElementById('damageLevel').addEventListener('change', updateWeaponInfo);
 
+            // Weapon search
+            document.getElementById('weaponSearch').addEventListener('input', filterWeapons);
+
+            updateWeaponInfo();
+        }
+
+        function filterWeapons() {
+            const query = document.getElementById('weaponSearch').value.toLowerCase().trim();
+            const sel = document.getElementById('weaponSelect');
+            const currentVal = sel.value;
+
+            // Clear existing options
+            sel.innerHTML = '';
+
+            const cats = [...new Set(WEAPONS.map(w => w.cat))];
+            let firstMatch = null;
+
+            cats.forEach(cat => {
+                const filtered = WEAPONS.filter(w => w.cat === cat &&
+                    (query === '' || w.name.toLowerCase().includes(query) || cat.toLowerCase().includes(query)));
+                if (filtered.length === 0) return;
+
+                const og = document.createElement('optgroup');
+                og.label = cat;
+                filtered.forEach(w => {
+                    const o = document.createElement('option');
+                    o.value = WEAPONS.indexOf(w);
+                    o.textContent = w.name;
+                    if (firstMatch === null) firstMatch = o.value;
+                    og.appendChild(o);
+                });
+                sel.appendChild(og);
+            });
+
+            // Try to keep current selection, otherwise pick first match
+            if (sel.querySelector(`option[value="${currentVal}"]`)) {
+                sel.value = currentVal;
+            } else if (firstMatch !== null) {
+                sel.value = firstMatch;
+            }
+
             updateWeaponInfo();
         }
 
@@ -1115,6 +1158,35 @@
             };
         }
 
+        // ========== AUDIO ==========
+        const combatSounds = [
+            new Audio('sword_combat_#1-1772007797355.mp3'),
+            new Audio('Sword_swings_#3-1772007886928.mp3'),
+            new Audio('Armor_clank_combat_#3-1772007854432.mp3')
+        ];
+        const victorySfx = new Audio('Victory_trumpet_medi_#4-1772007552480.mp3');
+        const defeatSfx = new Audio('sad_defeat_trumpet_m_#4-1772007661285.mp3');
+
+        // Preload
+        combatSounds.forEach(s => { s.volume = 0.5; s.load(); });
+        victorySfx.volume = 0.6; victorySfx.load();
+        defeatSfx.volume = 0.6; defeatSfx.load();
+
+        let activeCombatSounds = [];
+
+        function playRandomCombatSound() {
+            const snd = combatSounds[Math.floor(Math.random() * combatSounds.length)];
+            const clone = snd.cloneNode();
+            clone.volume = 0.3 + Math.random() * 0.3;
+            clone.play().catch(() => { });
+            activeCombatSounds.push(clone);
+        }
+
+        function stopAllCombatSounds() {
+            activeCombatSounds.forEach(s => { s.pause(); s.currentTime = 0; });
+            activeCombatSounds = [];
+        }
+
         function runSimulation() {
             const btn = document.getElementById('btnSimulate');
             btn.disabled = true;
@@ -1133,6 +1205,13 @@
             bar.style.width = '0%';
             pct.textContent = '0%';
 
+            // Start combat sounds
+            stopAllCombatSounds();
+            playRandomCombatSound();
+            const sfxInterval = setInterval(() => {
+                playRandomCombatSound();
+            }, 800 + Math.random() * 1200);
+
             const loadingMessages = [
                 'Preparando combate...',
                 'Calculando swing speed...',
@@ -1147,14 +1226,13 @@
             ];
 
             let progress = 0;
-            const totalDuration = 5000; // 5 seconds
-            const interval = 50; // update every 50ms
+            const totalDuration = 5000;
+            const interval = 50;
             const steps = totalDuration / interval;
             let step = 0;
 
             const loadingInterval = setInterval(() => {
                 step++;
-                // Ease-in-out progress for natural feel
                 const raw = step / steps;
                 progress = raw < 0.5
                     ? 2 * raw * raw
@@ -1163,13 +1241,14 @@
                 bar.style.width = displayPct + '%';
                 pct.textContent = displayPct + '%';
 
-                // Cycle through messages
                 const msgIdx = Math.min(Math.floor(progress * loadingMessages.length), loadingMessages.length - 1);
                 details.textContent = loadingMessages[msgIdx];
 
                 if (step >= steps) {
                     clearInterval(loadingInterval);
-                    // Run the actual simulation
+                    clearInterval(sfxInterval);
+                    stopAllCombatSounds();
+
                     const simResults = executeSimulation();
                     bar.style.width = '100%';
                     pct.textContent = '100%';
@@ -1251,6 +1330,16 @@
             const verdict = document.getElementById('verdict');
             const isKill = r.killRate >= 0.5;
             verdict.className = 'verdict-bar ' + (isKill ? 'kill' : 'survive');
+
+            // Play verdict sound
+            if (isKill) {
+                victorySfx.currentTime = 0;
+                victorySfx.play().catch(() => { });
+            } else {
+                defeatSfx.currentTime = 0;
+                defeatSfx.play().catch(() => { });
+            }
+
             if (isKill) {
                 verdict.innerHTML = `☠️ ALVO ELIMINADO` +
                     `<div class="verdict-sub">${(r.killRate * 100).toFixed(1)}% de chance de matar — Tempo médio: ${r.avgDeathTime?.toFixed(1) ?? '?'}s</div>`;
