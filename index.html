@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terra Fatalis - Advanced Armory Analytics</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Outfit:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0505;
+            /* Deep abyssal crimson/black */
+            --card-bg: rgba(20, 5, 5, 0.4);
+            /* Dark iron/obsidian */
+            --card-border: rgba(255, 60, 60, 0.15);
+            /* Forged red border */
+            --card-border-glow: rgba(255, 42, 42, 0.3);
+
+            /* Skill accents adapted for Dark Fantasy / Forge theme */
+            --accent-swords: #ff2a2a;
+            /* Blood Red */
+            --accent-fencing: #ff5e3a;
+            /* Ember Orange */
+            --accent-maces: #b33939;
+            /* Dried Blood */
+            --accent-bows: #d35400;
+            /* Rust */
+            --accent-throwing: #c0392b;
+            /* Dark Crimson */
+            --accent-artifacts: #8e44ad;
+            /* Void Purple */
+
+            --text-main: #e0d8d8;
+            /* Pale ash */
+            --text-muted: #8c7a7a;
+            /* Dark ash */
+            --sort-active: rgba(255, 42, 42, 0.2);
+            --neon-green: #ff2a2a;
+            /* Reminiscent variable repurposed for red glows */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255, 42, 42, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(139, 0, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(40, 10, 10, 0.5) 0%, transparent 60%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .logo-container img {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 20px rgba(255, 42, 42, 0.3));
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 4px 20px rgba(255, 42, 42, 0.4), 0 0 10px rgba(255, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-family: 'Cinzel', serif;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .category-header {
+            margin: 60px 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 10px;
+        }
+
+        .category-header h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header-swords {
+            color: var(--accent-swords);
+            text-shadow: 0 0 25px rgba(255, 42, 42, 0.4);
+        }
+
+        .header-fencing {
+            color: var(--accent-fencing);
+            text-shadow: 0 0 25px rgba(255, 94, 58, 0.4);
+        }
+
+        .header-maces {
+            color: var(--accent-maces);
+            text-shadow: 0 0 25px rgba(179, 57, 57, 0.4);
+        }
+
+        .header-bows {
+            color: var(--accent-bows);
+            text-shadow: 0 0 25px rgba(211, 84, 0, 0.4);
+        }
+
+        .header-throwing {
+            color: var(--accent-throwing);
+            text-shadow: 0 0 25px rgba(192, 57, 43, 0.4);
+        }
+
+        .header-artifacts {
+            color: var(--accent-artifacts);
+            text-shadow: 0 0 25px rgba(142, 68, 173, 0.4);
+        }
+
+        .sub-category {
+            margin: 30px 0 15px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #d1c4e9;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .badge {
+            background: rgba(255, 42, 42, 0.1);
+            border: 1px solid var(--card-border);
+            padding: 3px 10px;
+            border-radius: 4px;
+            /* More squared for forge look */
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-swords);
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            /* Sharper edges */
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 42, 42, 0.05);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s, color 0.2s;
+            border-bottom: 2px solid var(--card-border);
+        }
+
+        th:hover {
+            background: rgba(255, 42, 42, 0.1);
+            color: white;
+        }
+
+        th.sort-asc::after {
+            content: ' ▲';
+            font-size: 0.7em;
+        }
+
+        th.sort-desc::after {
+            content: ' ▼';
+            font-size: 0.7em;
+        }
+
+        td {
+            padding: 14px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95rem;
+        }
+
+        tr:hover td {
+            background: rgba(255, 42, 42, 0.08);
+            cursor: pointer;
+        }
+
+        td:first-child {
+            font-weight: 600;
+            color: white;
+        }
+
+        .val-min {
+            color: #bdbdbd;
+        }
+
+        .val-max {
+            color: white;
+            font-weight: 600;
+        }
+
+        .val-dash {
+            color: #616161;
+            margin: 0 4px;
+        }
+
+        .stat-speed {
+            color: var(--accent-fencing);
+            font-weight: 600;
+        }
+
+        .stat-sphere {
+            color: var(--accent-maces);
+        }
+
+        .stat-zero {
+            opacity: 0.3;
+        }
+
+        input.search-bar {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            display: block;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 18px 25px;
+            border-radius: 30px;
+            color: white;
+            font-family: inherit;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input.search-bar:focus {
+            border-color: rgba(255, 42, 42, 0.6);
+            box-shadow: 0 0 30px rgba(255, 42, 42, 0.15);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 80px;
+            padding-bottom: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Calculator Styles */
+        .calculator-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            /* Sharper */
+            padding: 30px;
+            margin: 0 auto 50px;
+            max-width: 600px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(255, 42, 42, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+        }
+
+        .calculator-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-swords), transparent);
+            opacity: 0.5;
+        }
+
+        .calc-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(255, 42, 42, 0.6);
+        }
+
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .calc-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .calc-group label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calc-group input {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 42, 42, 0.2);
+            color: #ffcccc;
+            padding: 12px 15px;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            font-family: inherit;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .calc-group input:focus {
+            border-color: var(--accent-swords);
+            box-shadow: 0 0 20px rgba(255, 42, 42, 0.2), inset 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .calc-result {
+            margin-top: 15px;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 42, 42, 0.05);
+            border: 1px solid rgba(255, 42, 42, 0.3);
+            border-radius: 6px;
+            box-shadow: inset 0 0 30px rgba(255, 42, 42, 0.05);
+        }
+
+        .calc-result span {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 0 20px rgba(255, 42, 42, 0.6), 0 0 10px rgba(255, 42, 42, 0.8);
+        }
+
+        .calc-result small {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .selected-weapon-badge {
+            background: rgba(255, 42, 42, 0.1);
+            color: #ffcccc;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            display: inline-block;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 42, 42, 0.3);
+            text-align: center;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(255, 42, 42, 0.2);
+        }
+
+        .calc-new-stat {
+            color: #ffcccc;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 42, 42, 0.5);
+        }
+
+        .ref-span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: normal;
+            margin-left: 5px;
+            white-space: nowrap;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .calc-btn {
+            background: rgba(255, 42, 42, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 42, 42, 0.4);
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calc-btn:hover {
+            background: rgba(255, 42, 42, 0.3);
+            box-shadow: 0 0 20px rgba(255, 42, 42, 0.4);
+            border-color: rgba(255, 42, 42, 0.8);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="logo.png" alt="Terra Fatalis Logo" onerror="this.style.display='none'">
+            </div>
+            <div class="subtitle">Advanced Armory Dashboard</div>
+        </header>
+
+        <input type="text" id="searchInput" class="search-bar" placeholder="Search weapons..." onkeyup="filterTables()">
+
+        <!-- Swing Speed Calculator -->
+        <div class="calculator-container">
+            <div class="calc-title">Weapon Tuner & Swing Speed</div>
+            <div id="selectedWeaponDisplay" class="selected-weapon-badge hidden">Working on: <strong
+                    id="selectedWeaponName">None</strong></div>
+
+            <div class="calc-row">
+                <div class="calc-group">
+                    <label for="calcSpeed">Sphere Speed <span id="refSpeed" class="ref-span"></span></label>
+                    <input type="number" id="calcSpeed" value="350" min="0" oninput="calculateSwingSpeed()">
+                </div>
+                <div class="calc-group">
+                    <label for="calcDex">Dexterity</label>
+                    <input type="number" id="calcDex" value="100" min="0" oninput="calculateSwingSpeed()">
+                </div>
+            </div>
+            <div class="calc-row">
+                <div class="calc-group">
+                    <label for="calcMinDmg">Min Damage <span id="refMin" class="ref-span"></span></label>
+                    <input type="number" id="calcMinDmg" value="0" min="0" oninput="calculateSwingSpeed()">
+                </div>
+                <div class="calc-group">
+                    <label for="calcMaxDmg">Max Damage <span id="refMax" class="ref-span"></span></label>
+                    <input type="number" id="calcMaxDmg" value="0" min="0" oninput="calculateSwingSpeed()">
+                </div>
+            </div>
+            <div class="calc-result">
+                <span id="calcResult">2.28s</span>
+                <small>Estimated Swing Time</small>
+            </div>
+
+            <div class="btn-group">
+                <button id="calcConfirmBtn" class="calc-btn hidden" onclick="scrollToWeapon()">Confirmar</button>
+                <button id="calcResetBtn" class="calc-btn hidden"
+                    style="border-color: rgba(150, 150, 150, 0.4); color: #ccc; background: rgba(0, 0, 0, 0.4);"
+                    onclick="resetWeapon()">Reverter</button>
+            </div>
+        </div>
+
+        <!-- Swordsmanship -->
+        <div class="category-header">
+            <h2 class="header-swords">Swordsmanship</h2>
+        </div>
+
+        <div class="sub-category">One-Handed <span class="badge" id="c-swords-1h">0</span></div>
+        <div class="glass-card">
+            <table id="t-swords-1h"></table>
+        </div>
+
+        <div class="sub-category">Two-Handed <span class="badge" id="c-swords-2h">0</span></div>
+        <div class="glass-card">
+            <table id="t-swords-2h"></table>
+        </div>
+
+        <!-- Fencing -->
+        <div class="category-header">
+            <h2 class="header-fencing">Fencing</h2>
+        </div>
+
+        <div class="sub-category">One-Handed <span class="badge" id="c-fencing-1h">0</span></div>
+        <div class="glass-card">
+            <table id="t-fencing-1h"></table>
+        </div>
+
+        <div class="sub-category">Two-Handed <span class="badge" id="c-fencing-2h">0</span></div>
+        <div class="glass-card">
+            <table id="t-fencing-2h"></table>
+        </div>
+
+        <!-- Macefighting -->
+        <div class="category-header">
+            <h2 class="header-maces">Macefighting</h2>
+        </div>
+
+        <div class="sub-category">One-Handed <span class="badge" id="c-maces-1h">0</span></div>
+        <div class="glass-card">
+            <table id="t-maces-1h"></table>
+        </div>
+
+        <div class="sub-category">Two-Handed <span class="badge" id="c-maces-2h">0</span></div>
+        <div class="glass-card">
+            <table id="t-maces-2h"></table>
+        </div>
+
+        <!-- Bows -->
+        <div class="category-header">
+            <h2 class="header-bows">Bows</h2>
+        </div>
+
+        <div class="sub-category">One-Handed <span class="badge" id="c-bows-1h">0</span></div>
+        <div class="glass-card">
+            <table id="t-bows-1h"></table>
+        </div>
+
+        <div class="sub-category">Two-Handed <span class="badge" id="c-bows-2h">0</span></div>
+        <div class="glass-card">
+            <table id="t-bows-2h"></table>
+        </div>
+
+        <!-- Throwing -->
+        <div class="category-header">
+            <h2 class="header-throwing">Throwing</h2>
+        </div>
+
+        <div class="sub-category">One-Handed <span class="badge" id="c-throwing-1h">0</span></div>
+        <div class="glass-card">
+            <table id="t-throwing-1h"></table>
+        </div>
+
+        <div class="sub-category">Two-Handed <span class="badge" id="c-throwing-2h">0</span></div>
+        <div class="glass-card">
+            <table id="t-throwing-2h"></table>
+        </div>
+
+        <!-- Artifacts -->
+        <div class="category-header">
+            <h2 class="header-artifacts">Artifacts & Specials (Zero Stats)</h2>
+            <span class="badge" id="c-artifacts">0</span>
+        </div>
+        <div class="glass-card">
+            <table id="t-artifacts"></table>
+        </div>
+
+        <!-- NEW: Auto-Balancing V2 Engine -->
+        <div class="category-header"
+            style="margin-top: 80px; border-top: 1px solid var(--card-border); padding-top: 40px;">
+            <h2 style="color: #ffcccc; text-shadow: 0 0 20px rgba(255, 42, 42, 0.4);">V2 Balance Engine: Baseline
+                Calibration</h2>
+        </div>
+
+        <div class="calculator-container"
+            style="margin-bottom: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,42,42,0.02);">
+            <div class="calc-row">
+                <div class="calc-group">
+                    <label for="balBaseline">Target Baseline Min Dmg</label>
+                    <input type="number" id="balBaseline" value="15" step="1" oninput="renderDash()">
+                </div>
+                <div class="calc-group">
+                    <label for="bal2HBonus">Two-Handed Bonus</label>
+                    <input type="number" id="bal2HBonus" value="2" step="1" oninput="renderDash()">
+                </div>
+            </div>
+            <div class="calc-row">
+                <div class="calc-group">
+                    <label for="balFastThreshold">"Very Fast" Threshold (sec)</label>
+                    <input type="number" id="balFastThreshold" value="2.15" step="0.05" oninput="renderDash()">
+                </div>
+                <div class="calc-group">
+                    <label for="balFastPenalty">"Very Fast" Penalty</label>
+                    <input type="number" id="balFastPenalty" value="-2" step="1" oninput="renderDash()">
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <table id="t-balancer"></table>
+        </div>
+
+        <footer>&copy; 2026 Terra Fatalis</footer>
+    </div>
+
+    <script>
+        const weaponData = [{"Name":"Fists","OldMin":1,"OldMax":8,"AosMin":1,"AosMax":4,"SphereSpeed":220,"OldSpeed":30,"SwingSeconds":1.4300000000000002,"Skill":"Swords","Layer":"OneHanded"},{"Name":"SlayerEntry","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"SlayerGroup","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ArmorIgnore","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ArmorPierce","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Bladeweave","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"BleedAttack","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Block","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ConcussionBlow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"CrushingBlow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"DefenseMastery","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Disarm","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Dismount","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"DoubleShot","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"DoubleStrike","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"DualWield","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Feint","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ForceArrow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ForceOfNature","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"FrenziedWhirlwind","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"InfectiousStrike","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"InfusedThrow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"LightningArrow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"MortalStrike","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"MovingShot","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"MysticArc","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"NerveStrike","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ParalyzingBlow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"PsychicAttack","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"RidingSwipe","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"SerpentArrow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ShadowStrike","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"TalonStrike","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"WhirlwindAttack","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"AxeOfTheHeavens","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"BladeOfInsanity","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"BladeOfTheRighteous","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"BoneCrusher","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Maces","Layer":"OneHanded"},{"Name":"BreathOfTheDead","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Frostbringer","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"LegacyOfTheDreadLord","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"SerpentsFang","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"StaffOfTheMagi","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"TheBeserkersMaul","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"TheDragonSlayer","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"TheDryadBow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"TheTaskmaster","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"TitansHammer","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Maces","Layer":"OneHanded"},{"Name":"ZyronicClaw","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Axe","OldMin":18,"OldMax":33,"AosMin":14,"AosMax":16,"SphereSpeed":383,"OldSpeed":37,"SwingSeconds":2.4895,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"BattleAxe","OldMin":18,"OldMax":36,"AosMin":15,"AosMax":17,"SphereSpeed":429,"OldSpeed":30,"SwingSeconds":2.7885,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"DoubleAxe","OldMin":19,"OldMax":36,"AosMin":15,"AosMax":17,"SphereSpeed":401,"OldSpeed":37,"SwingSeconds":2.6065,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"DualShortAxes","OldMin":0,"OldMax":0,"AosMin":14,"AosMax":17,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ExecutionersAxe","OldMin":24,"OldMax":33,"AosMin":15,"AosMax":17,"SphereSpeed":408,"OldSpeed":37,"SwingSeconds":2.652,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"GuardianAxe","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Hatchet","OldMin":15,"OldMax":28,"AosMin":13,"AosMax":15,"SphereSpeed":342,"OldSpeed":40,"SwingSeconds":2.223,"Skill":"Swords","Layer":"OneHanded"},{"Name":"HeavyOrnateAxe","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"LargeBattleAxe","OldMin":22,"OldMax":40,"AosMin":16,"AosMax":17,"SphereSpeed":455,"OldSpeed":30,"SwingSeconds":2.9575,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"Pickaxe","OldMin":1,"OldMax":15,"AosMin":13,"AosMax":15,"SphereSpeed":400,"OldSpeed":35,"SwingSeconds":2.6,"Skill":"Swords","Layer":"OneHanded"},{"Name":"SingingAxe","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ThunderingAxe","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"TwoHandedAxe","OldMin":19,"OldMax":41,"AosMin":16,"AosMax":17,"SphereSpeed":430,"OldSpeed":30,"SwingSeconds":2.795,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"WarAxe","OldMin":13,"OldMax":26,"AosMin":14,"AosMax":15,"SphereSpeed":350,"OldSpeed":40,"SwingSeconds":2.275,"Skill":"Maces","Layer":"OneHanded"},{"Name":"ButcherKnife","OldMin":2,"OldMax":5,"AosMin":9,"AosMax":11,"SphereSpeed":200,"OldSpeed":40,"SwingSeconds":1.3,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Cleaver","OldMin":2,"OldMax":5,"AosMin":11,"AosMax":13,"SphereSpeed":200,"OldSpeed":40,"SwingSeconds":1.3,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Dagger","OldMin":1,"OldMax":4,"AosMin":10,"AosMax":11,"SphereSpeed":200,"OldSpeed":55,"SwingSeconds":1.3,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"SkinningKnife","OldMin":1,"OldMax":10,"AosMin":9,"AosMax":11,"SphereSpeed":362,"OldSpeed":40,"SwingSeconds":2.353,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ThrowingDagger","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Club","OldMin":12,"OldMax":19,"AosMin":11,"AosMax":13,"SphereSpeed":302,"OldSpeed":40,"SwingSeconds":1.963,"Skill":"Maces","Layer":"OneHanded"},{"Name":"DiscMace","OldMin":0,"OldMax":0,"AosMin":11,"AosMax":15,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Maces","Layer":"OneHanded"},{"Name":"EmeraldMace","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Maces","Layer":"OneHanded"},{"Name":"FireworksWand","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Maces","Layer":"OneHanded"},{"Name":"HammerPick","OldMin":20,"OldMax":45,"AosMin":15,"AosMax":17,"SphereSpeed":604,"OldSpeed":30,"SwingSeconds":3.926,"Skill":"Maces","Layer":"OneHanded"},{"Name":"Mace","OldMin":12,"OldMax":33,"AosMin":12,"AosMax":14,"SphereSpeed":441,"OldSpeed":30,"SwingSeconds":2.8665000000000003,"Skill":"Maces","Layer":"OneHanded"},{"Name":"MagicWand","OldMin":2,"OldMax":6,"AosMin":9,"AosMax":11,"SphereSpeed":400,"OldSpeed":35,"SwingSeconds":2.6,"Skill":"Maces","Layer":"OneHanded"},{"Name":"Maul","OldMin":16,"OldMax":29,"AosMin":14,"AosMax":16,"SphereSpeed":431,"OldSpeed":30,"SwingSeconds":2.8015,"Skill":"Maces","Layer":"OneHanded"},{"Name":"RubyMace","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Maces","Layer":"OneHanded"},{"Name":"SapphireMace","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Maces","Layer":"OneHanded"},{"Name":"Scepter","OldMin":14,"OldMax":17,"AosMin":14,"AosMax":17,"SphereSpeed":450,"OldSpeed":30,"SwingSeconds":2.9250000000000003,"Skill":"Maces","Layer":"OneHanded"},{"Name":"SilverEtchedMace","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Maces","Layer":"OneHanded"},{"Name":"WarHammer","OldMin":29,"OldMax":47,"AosMin":17,"AosMax":18,"SphereSpeed":618,"OldSpeed":31,"SwingSeconds":4.017,"Skill":"Maces","Layer":"TwoHanded"},{"Name":"WarMace","OldMin":14,"OldMax":30,"AosMin":16,"AosMax":17,"SphereSpeed":420,"OldSpeed":32,"SwingSeconds":2.7300000000000004,"Skill":"Maces","Layer":"OneHanded"},{"Name":"AssassinSpike","OldMin":10,"OldMax":12,"AosMin":10,"AosMax":12,"SphereSpeed":0,"OldSpeed":50,"SwingSeconds":0.325,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"ButchersWarCleaver","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"DiamondMace","OldMin":14,"OldMax":17,"AosMin":14,"AosMax":17,"SphereSpeed":0,"OldSpeed":37,"SwingSeconds":0.2405,"Skill":"Maces","Layer":"OneHanded"},{"Name":"ElvenCompositeLongbow","OldMin":12,"OldMax":16,"AosMin":12,"AosMax":16,"SphereSpeed":0,"OldSpeed":27,"SwingSeconds":0.17550000000000002,"Skill":"Bows","Layer":"OneHanded"},{"Name":"ElvenMachete","OldMin":13,"OldMax":15,"AosMin":13,"AosMax":15,"SphereSpeed":0,"OldSpeed":41,"SwingSeconds":0.2665,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ElvenSpellblade","OldMin":12,"OldMax":14,"AosMin":12,"AosMax":14,"SphereSpeed":0,"OldSpeed":44,"SwingSeconds":0.28600000000000003,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"Leafblade","OldMin":13,"OldMax":15,"AosMin":13,"AosMax":15,"SphereSpeed":0,"OldSpeed":42,"SwingSeconds":0.273,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"MagicalShortbow","OldMin":9,"OldMax":13,"AosMin":9,"AosMax":13,"SphereSpeed":0,"OldSpeed":38,"SwingSeconds":0.24700000000000003,"Skill":"Bows","Layer":"OneHanded"},{"Name":"OrnateAxe","OldMin":18,"OldMax":20,"AosMin":18,"AosMax":20,"SphereSpeed":0,"OldSpeed":26,"SwingSeconds":0.169,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"RadiantScimitar","OldMin":12,"OldMax":14,"AosMin":12,"AosMax":14,"SphereSpeed":0,"OldSpeed":43,"SwingSeconds":0.2795,"Skill":"Swords","Layer":"OneHanded"},{"Name":"RuneBlade","OldMin":15,"OldMax":17,"AosMin":15,"AosMax":17,"SphereSpeed":0,"OldSpeed":35,"SwingSeconds":0.22749999999999998,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"WarCleaver","OldMin":9,"OldMax":11,"AosMin":9,"AosMax":11,"SphereSpeed":0,"OldSpeed":48,"SwingSeconds":0.312,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"WildStaff","OldMin":10,"OldMax":12,"AosMin":10,"AosMax":12,"SphereSpeed":0,"OldSpeed":48,"SwingSeconds":0.312,"Skill":"Maces","Layer":"OneHanded"},{"Name":"BlightGrippedLongbow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"ColdForgedBlade","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"FaerieFire","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"LuminousRuneBlade","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"MischiefMaker","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"OverseerSunderedBlade","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"PhantomStaff","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"RuneCarvingKnife","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"ShardThrasher","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Maces","Layer":"OneHanded"},{"Name":"SilvanisFeywoodBow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"TheNightReaper","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"Bardiche","OldMin":19,"OldMax":48,"AosMin":17,"AosMax":18,"SphereSpeed":516,"OldSpeed":26,"SwingSeconds":3.354,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"Halberd","OldMin":20,"OldMax":57,"AosMin":18,"AosMax":19,"SphereSpeed":616,"OldSpeed":25,"SwingSeconds":4.0040000000000004,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"Scythe","OldMin":25,"OldMax":39,"AosMin":15,"AosMax":18,"SphereSpeed":475,"OldSpeed":32,"SwingSeconds":3.0875,"Skill":"Swords","Layer":"OneHanded"},{"Name":"AssassinsShortbow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":290,"OldSpeed":0,"SwingSeconds":1.885,"Skill":"Bows","Layer":"OneHanded"},{"Name":"BarbedLongbow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"Bow","OldMin":13,"OldMax":20,"AosMin":0,"AosMax":0,"SphereSpeed":338,"OldSpeed":20,"SwingSeconds":2.197,"Skill":"Bows","Layer":"TwoHanded"},{"Name":"CompositeBow","OldMin":15,"OldMax":17,"AosMin":0,"AosMax":17,"SphereSpeed":520,"OldSpeed":25,"SwingSeconds":3.3800000000000003,"Skill":"Bows","Layer":"TwoHanded"},{"Name":"Crossbow","OldMin":14,"OldMax":30,"AosMin":18,"AosMax":0,"SphereSpeed":418,"OldSpeed":18,"SwingSeconds":2.717,"Skill":"Bows","Layer":"TwoHanded"},{"Name":"FireBow","OldMin":15,"OldMax":32,"AosMin":0,"AosMax":0,"SphereSpeed":538,"OldSpeed":0,"SwingSeconds":3.497,"Skill":"Bows","Layer":"OneHanded"},{"Name":"FrozenLongbow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"HeavyCrossbow","OldMin":27,"OldMax":39,"AosMin":0,"AosMax":0,"SphereSpeed":683,"OldSpeed":10,"SwingSeconds":4.4395,"Skill":"Bows","Layer":"TwoHanded"},{"Name":"JukaBow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"LightweightShortbow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"LongbowOfMight","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"MysticalShortbow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"RangersShortbow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"RepeatingCrossbow","OldMin":10,"OldMax":12,"AosMin":0,"AosMax":12,"SphereSpeed":356,"OldSpeed":41,"SwingSeconds":2.314,"Skill":"Bows","Layer":"TwoHanded"},{"Name":"SlayerLongbow","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Bows","Layer":"OneHanded"},{"Name":"Bokuto","OldMin":9,"OldMax":11,"AosMin":9,"AosMax":11,"SphereSpeed":298,"OldSpeed":53,"SwingSeconds":1.937,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Daisho","OldMin":13,"OldMax":15,"AosMin":13,"AosMax":15,"SphereSpeed":362,"OldSpeed":40,"SwingSeconds":2.353,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"Kama","OldMin":9,"OldMax":11,"AosMin":9,"AosMax":11,"SphereSpeed":290,"OldSpeed":55,"SwingSeconds":1.885,"Skill":"Fencing","Layer":"TwoHanded"},{"Name":"Lajatang","OldMin":16,"OldMax":18,"AosMin":16,"AosMax":18,"SphereSpeed":290,"OldSpeed":55,"SwingSeconds":1.885,"Skill":"Fencing","Layer":"TwoHanded"},{"Name":"NoDachi","OldMin":16,"OldMax":18,"AosMin":16,"AosMax":18,"SphereSpeed":400,"OldSpeed":35,"SwingSeconds":2.6,"Skill":"Swords","Layer":"TwoHanded"},{"Name":"Nunchaku","OldMin":11,"OldMax":13,"AosMin":11,"AosMax":13,"SphereSpeed":323,"OldSpeed":47,"SwingSeconds":2.0995,"Skill":"Maces","Layer":"OneHanded"},{"Name":"Sai","OldMin":9,"OldMax":11,"AosMin":9,"AosMax":11,"SphereSpeed":290,"OldSpeed":55,"SwingSeconds":1.885,"Skill":"Fencing","Layer":"TwoHanded"},{"Name":"Tekagi","OldMin":10,"OldMax":12,"AosMin":10,"AosMax":12,"SphereSpeed":298,"OldSpeed":53,"SwingSeconds":1.937,"Skill":"Fencing","Layer":"TwoHanded"},{"Name":"Tessen","OldMin":10,"OldMax":12,"AosMin":10,"AosMax":12,"SphereSpeed":310,"OldSpeed":50,"SwingSeconds":2.015,"Skill":"Maces","Layer":"TwoHanded"},{"Name":"Tetsubo","OldMin":12,"OldMax":14,"AosMin":12,"AosMax":14,"SphereSpeed":333,"OldSpeed":45,"SwingSeconds":2.1645000000000003,"Skill":"Maces","Layer":"TwoHanded"},{"Name":"Wakizashi","OldMin":11,"OldMax":13,"AosMin":11,"AosMax":13,"SphereSpeed":338,"OldSpeed":44,"SwingSeconds":2.197,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Yumi","OldMin":18,"OldMax":20,"AosMin":0,"AosMax":20,"SphereSpeed":520,"OldSpeed":25,"SwingSeconds":3.3800000000000003,"Skill":"Bows","Layer":"TwoHanded"},{"Name":"BladedStaff","OldMin":14,"OldMax":16,"AosMin":14,"AosMax":16,"SphereSpeed":383,"OldSpeed":37,"SwingSeconds":2.4895,"Skill":"Swords","Layer":"OneHanded"},{"Name":"DoubleBladedStaff","OldMin":12,"OldMax":13,"AosMin":12,"AosMax":13,"SphereSpeed":314,"OldSpeed":49,"SwingSeconds":2.0410000000000004,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"DualPointedSpear","OldMin":0,"OldMax":0,"AosMin":11,"AosMax":14,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"Pike","OldMin":14,"OldMax":16,"AosMin":14,"AosMax":16,"SphereSpeed":383,"OldSpeed":37,"SwingSeconds":2.4895,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"Pitchfork","OldMin":4,"OldMax":16,"AosMin":13,"AosMax":14,"SphereSpeed":333,"OldSpeed":45,"SwingSeconds":2.1645000000000003,"Skill":"Fencing","Layer":"TwoHanded"},{"Name":"ShortSpear","OldMin":15,"OldMax":29,"AosMin":10,"AosMax":13,"SphereSpeed":306,"OldSpeed":50,"SwingSeconds":1.989,"Skill":"Fencing","Layer":"TwoHanded"},{"Name":"Spear","OldMin":15,"OldMax":34,"AosMin":13,"AosMax":15,"SphereSpeed":351,"OldSpeed":46,"SwingSeconds":2.2815,"Skill":"Fencing","Layer":"TwoHanded"},{"Name":"TribalSpear","OldMin":13,"OldMax":30,"AosMin":13,"AosMax":15,"SphereSpeed":362,"OldSpeed":46,"SwingSeconds":2.353,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"WarFork","OldMin":16,"OldMax":27,"AosMin":12,"AosMax":13,"SphereSpeed":390,"OldSpeed":45,"SwingSeconds":2.535,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"BlackStaff","OldMin":15,"OldMax":33,"AosMin":13,"AosMax":16,"SphereSpeed":391,"OldSpeed":35,"SwingSeconds":2.5415,"Skill":"Maces","Layer":"TwoHanded"},{"Name":"GlacialStaff","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"GlassStaff","OldMin":0,"OldMax":0,"AosMin":11,"AosMax":14,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Maces","Layer":"OneHanded"},{"Name":"GnarledStaff","OldMin":14,"OldMax":33,"AosMin":15,"AosMax":17,"SphereSpeed":392,"OldSpeed":33,"SwingSeconds":2.548,"Skill":"Maces","Layer":"TwoHanded"},{"Name":"QuarterStaff","OldMin":9,"OldMax":35,"AosMin":11,"AosMax":14,"SphereSpeed":355,"OldSpeed":48,"SwingSeconds":2.3075,"Skill":"Maces","Layer":"TwoHanded"},{"Name":"SerpentstoneStaff","OldMin":0,"OldMax":0,"AosMin":16,"AosMax":19,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Maces","Layer":"OneHanded"},{"Name":"ShepherdsCrook","OldMin":3,"OldMax":12,"AosMin":13,"AosMax":15,"SphereSpeed":450,"OldSpeed":30,"SwingSeconds":2.9250000000000003,"Skill":"Maces","Layer":"OneHanded"},{"Name":"AdventurersMachete","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"BloodBlade","OldMin":0,"OldMax":0,"AosMin":10,"AosMax":12,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"BoneHarvester","OldMin":13,"OldMax":15,"AosMin":13,"AosMax":15,"SphereSpeed":391,"OldSpeed":36,"SwingSeconds":2.5415,"Skill":"Swords","Layer":"OneHanded"},{"Name":"BoneMachete","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Broadsword","OldMin":10,"OldMax":25,"AosMin":14,"AosMax":15,"SphereSpeed":334,"OldSpeed":45,"SwingSeconds":2.171,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ChargedAssassinSpike","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"CorruptedRuneBlade","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"CrescentBlade","OldMin":11,"OldMax":14,"AosMin":11,"AosMax":14,"SphereSpeed":323,"OldSpeed":47,"SwingSeconds":2.0995,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Cutlass","OldMin":12,"OldMax":24,"AosMin":11,"AosMax":13,"SphereSpeed":332,"OldSpeed":45,"SwingSeconds":2.158,"Skill":"Swords","Layer":"OneHanded"},{"Name":"DarkglowScimitar","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"DiseasedMachete","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"DreadSword","OldMin":0,"OldMax":0,"AosMin":14,"AosMax":18,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"FierySpellblade","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"GargishTalwar","OldMin":0,"OldMax":0,"AosMin":16,"AosMax":19,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"GlassSword","OldMin":0,"OldMax":0,"AosMin":11,"AosMax":15,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"IcyScimitar","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"IcySpellblade","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Katana","OldMin":13,"OldMax":24,"AosMin":11,"AosMax":13,"SphereSpeed":331,"OldSpeed":58,"SwingSeconds":2.1515,"Skill":"Swords","Layer":"OneHanded"},{"Name":"KnightsWarCleaver","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Kryss","OldMin":11,"OldMax":18,"AosMin":10,"AosMax":12,"SphereSpeed":248,"OldSpeed":53,"SwingSeconds":1.612,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"Lance","OldMin":17,"OldMax":18,"AosMin":17,"AosMax":18,"SphereSpeed":537,"OldSpeed":24,"SwingSeconds":3.4905000000000004,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"LeafbladeOfEase","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Longsword","OldMin":13,"OldMax":30,"AosMin":15,"AosMax":16,"SphereSpeed":401,"OldSpeed":35,"SwingSeconds":2.6065,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Luckblade","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"MacheteOfDefense","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"MagekillerAssassinSpike","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"MagekillerLeafblade","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"MagesRuneBlade","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"OrcishMachete","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"RuneBladeOfKnowledge","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Runesabre","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Scimitar","OldMin":12,"OldMax":25,"AosMin":13,"AosMax":15,"SphereSpeed":342,"OldSpeed":43,"SwingSeconds":2.223,"Skill":"Swords","Layer":"OneHanded"},{"Name":"SerratedWarCleaver","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"SpellbladeOfDefense","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ThinLongsword","OldMin":8,"OldMax":34,"AosMin":15,"AosMax":16,"SphereSpeed":396,"OldSpeed":35,"SwingSeconds":2.574,"Skill":"Swords","Layer":"OneHanded"},{"Name":"TrueAssassinSpike","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"TrueLeafblade","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"TrueRadiantScimitar","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"TrueSpellblade","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"TrueWarCleaver","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"TwinklingScimitar","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"VikingSword","OldMin":12,"OldMax":35,"AosMin":15,"AosMax":17,"SphereSpeed":442,"OldSpeed":30,"SwingSeconds":2.873,"Skill":"Swords","Layer":"OneHanded"},{"Name":"WoundingAssassinSpike","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Fencing","Layer":"OneHanded"},{"Name":"Boomerang","OldMin":0,"OldMax":0,"AosMin":11,"AosMax":15,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"Cyclone","OldMin":0,"OldMax":0,"AosMin":13,"AosMax":17,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"SoulGlaive","OldMin":0,"OldMax":0,"AosMin":16,"AosMax":20,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"AncientWildStaff","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ArcanistsWildStaff","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"HardenedWildStaff","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"},{"Name":"ThornedWildStaff","OldMin":0,"OldMax":0,"AosMin":0,"AosMax":0,"SphereSpeed":0,"OldSpeed":0,"SwingSeconds":0,"Skill":"Swords","Layer":"OneHanded"}]
+;
+
+        const formatDamage = (min, max) => `
+        <span class="val-min">${min}</span><span class="val-dash">-</span><span class="val-max">${max}</span>
+    `;
+
+        const getHeaders = (tableId) => `
+        <thead>
+            <tr>
+                <th onclick="sortTable('${tableId}', 0, 'string')">Weapon Name</th>
+                <th onclick="sortTable('${tableId}', 1, 'num')">Old Min Dmg</th>
+                <th onclick="sortTable('${tableId}', 2, 'num')">Old Max Dmg</th>
+                <th onclick="sortTable('${tableId}', 3, 'num')" style="color:#ffcccc">Novo Sphere Min</th>
+                <th onclick="sortTable('${tableId}', 4, 'num')" style="color:#ffcccc">Novo Sphere Max</th>
+                <th onclick="sortTable('${tableId}', 5, 'num')">Sphere Speed</th>
+                <th onclick="sortTable('${tableId}', 6, 'num')">Old Speed</th>
+                <th onclick="sortTable('${tableId}', 7, 'float')">Swing (100 Dex)</th>
+                <th onclick="sortTable('${tableId}', 8, 'float')" style="color:#ffcccc">Novo Swing</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+
+        const getArtifactHeaders = (tableId) => `
+        <thead>
+            <tr>
+                <th onclick="sortTable('${tableId}', 0, 'string')">Identifier</th>
+                <th>Status</th>
+                <th onclick="sortTable('${tableId}', 2, 'float')">Swing (100 Dex)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+
+        const getBalancerHeaders = (tableId) => `
+        <thead>
+            <tr>
+                <th onclick="sortTable('${tableId}', 0, 'string')">Weapon Name</th>
+                <th onclick="sortTable('${tableId}', 1, 'string')">Category</th>
+                <th onclick="sortTable('${tableId}', 2, 'string')">Layer</th>
+                <th onclick="sortTable('${tableId}', 3, 'float')">Swing (s)</th>
+                <th onclick="sortTable('${tableId}', 4, 'num')">Current Old Min</th>
+                <th onclick="sortTable('${tableId}', 5, 'num')" style="color:#ffcccc;">Proposed Min</th>
+                <th onclick="sortTable('${tableId}', 6, 'num')">Difference</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+
+        function calculateBaseSwing(speed, dexRaw) {
+            if (speed <= 0) return 0;
+            let speedInSeconds = (speed / 100.0) * 0.65;
+            let bonusDex = Math.max(-50, Math.min(25, dexRaw - 100));
+            if (bonusDex > 0) speedInSeconds -= speedInSeconds * bonusDex * 0.008;
+            else if (bonusDex < 0) speedInSeconds -= speedInSeconds * bonusDex * 0.004;
+            return Math.max(0.25, speedInSeconds);
+        }
+
+        function renderDash() {
+            ['swords-1h', 'swords-2h', 'fencing-1h', 'fencing-2h', 'maces-1h', 'maces-2h', 'bows-1h', 'bows-2h', 'throwing-1h', 'throwing-2h'].forEach(id => {
+                const el = document.getElementById(`t-${id}`);
+                if (el) el.innerHTML = getHeaders(`t-${id}`);
+            });
+            const artEl = document.getElementById('t-artifacts');
+            if (artEl) artEl.innerHTML = getArtifactHeaders('t-artifacts');
+
+            const balEl = document.getElementById('t-balancer');
+            if (balEl) balEl.innerHTML = getBalancerHeaders('t-balancer');
+
+            const counts = {
+                'swords-1h': 0, 'swords-2h': 0,
+                'fencing-1h': 0, 'fencing-2h': 0,
+                'maces-1h': 0, 'maces-2h': 0,
+                'bows-1h': 0, 'bows-2h': 0,
+                'throwing-1h': 0, 'throwing-2h': 0,
+                'artifacts': 0
+            };
+
+            weaponData.forEach(w => {
+                const isZero = w.OldMax === 0 && w.AosMax === 0 && w.OldMin === 0 && w.AosMin === 0;
+
+                let targetTbody;
+                let rowHtml = "";
+
+                if (isZero) {
+                    const t = document.querySelector('#t-artifacts tbody');
+                    if (t) {
+                        targetTbody = t;
+                        counts['artifacts']++;
+                        rowHtml = `
+                        <tr onclick="fillCalculator(${w.SphereSpeed}, '${w.Name.replace(/'/g, "\'")}')">
+                            <td>${w.Name}</td>
+                            <td class="stat-zero">Requires Base Weapon</td>
+                            <td data-val="${w.SwingSeconds}"><span class="stat-speed">${w.SwingSeconds.toFixed(2)}s</span></td>
+                        </tr>
+                    `;
+                    }
+                } else {
+                    let cat = w.Skill.toLowerCase();
+                    if (!['swords', 'fencing', 'maces', 'bows', 'throwing'].includes(cat)) cat = 'swords';
+
+                    let hands = w.Layer.toLowerCase() === 'twohanded' ? '2h' : '1h';
+                    const key = `${cat}-${hands}`;
+
+                    const t = document.querySelector(`#t-${key} tbody`);
+                    if (t) {
+                        targetTbody = t;
+                        counts[key]++;
+                        let l_min = w.AosMin;
+                        let l_max = w.AosMax;
+                        let l_speed = w.SphereSpeed;
+                        let l_swing = w.SwingSeconds;
+                        let cls = "";
+
+                        let tunedData = localStorage.getItem('weapon_tune_' + w.Name);
+                        if (tunedData) {
+                            try {
+                                let parse = JSON.parse(tunedData);
+                                l_min = parse.minDmg;
+                                l_max = parse.maxDmg;
+                                l_speed = parse.speed;
+                                let currDex = parseFloat(document.getElementById('calcDex').value) || 100;
+                                l_swing = calculateBaseSwing(l_speed, currDex);
+                                cls = "calc-new-stat";
+                            } catch (e) { }
+                        }
+
+                        rowHtml = `
+                        <tr id="row-${w.Name.replace(/[^a-zA-Z0-9]/g, '-')}" onclick="fillCalculator(${w.SphereSpeed}, '${w.Name.replace(/'/g, "\'")}', ${w.AosMin}, ${w.AosMax}, this, ${w.OldMin}, ${w.OldMax})">
+                            <td>${w.Name}</td>
+                            <td data-val="${w.OldMin}">${w.OldMin}</td>
+                            <td data-val="${w.OldMax}">${w.OldMax}</td>
+                            <td data-val="${l_min}" class="cell-newmin ${cls}">${l_min}</td>
+                            <td data-val="${l_max}" class="cell-newmax ${cls}">${l_max}</td>
+                            <td data-val="${l_speed}" class="cell-speed ${cls}"><span class="stat-sphere">${l_speed}</span></td>
+                            <td data-val="${w.OldSpeed}">${w.OldSpeed}</td>
+                            <td data-val="${w.SwingSeconds}"><span class="stat-speed">${w.SwingSeconds.toFixed(2)}s</span></td>
+                            <td data-val="${l_swing}" class="cell-newswing ${cls}">${l_swing.toFixed(2)}s</td>
+                        </tr>
+                    `;
+                    
+                        // Balancer Logic with dynamic UI inputs
+                        const engineBase = parseInt(document.getElementById('balBaseline')?.value || 15);
+                        const engine2H = parseInt(document.getElementById('bal2HBonus')?.value || 2);
+                        const engineFastThresh = parseFloat(document.getElementById('balFastThreshold')?.value || 2.15);
+                        const engineFastPen = parseInt(document.getElementById('balFastPenalty')?.value || -2);
+
+                        let proposedMin = engineBase;
+                        if(w.Layer.toLowerCase() === 'twohanded') proposedMin += engine2H;
+                        if(l_swing <= engineFastThresh) proposedMin += engineFastPen;
+                        
+                        let diff = proposedMin - w.OldMin;
+                        let diffStr = diff > 0 ? `+${diff}` : (diff === 0 ? "0" : diff.toString());
+                        let diffColor = diff > 0 ? '#69f0ae' : (diff < 0 ? '#ff5252' : '#9e9e9e');
+
+                        const balTbody = document.querySelector('#t-balancer tbody');
+                        if (balTbody) {
+                            balTbody.insertAdjacentHTML('beforeend', `
+                                <tr>
+                                    <td>${w.Name}</td>
+                                    <td>${w.Skill}</td>
+                                    <td>${w.Layer}</td>
+                                    <td data-val="${l_swing}"><span class="stat-speed">${l_swing.toFixed(2)}s</span></td>
+                                    <td data-val="${w.OldMin}">${w.OldMin}</td>
+                                    <td data-val="${proposedMin}" style="color:#ffcccc; font-weight:700;">${proposedMin}</td>
+                                    <td data-val="${diff}" style="color:${diffColor}; font-weight:700;">${diffStr}</td>
+                                </tr>
+                            `);
+                        }
+                    }
+                }
+
+                if (targetTbody) targetTbody.insertAdjacentHTML('beforeend', rowHtml);
+            });
+
+            Object.keys(counts).forEach(k => {
+                const badge = document.getElementById(`c-${k}`);
+                if (badge) badge.innerText = counts[k];
+            });
+        }
+
+        function sortTable(tableId, colIndex, type) {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            // Toggle sort direction
+            let dir = table.getAttribute(`data-sort-dir-${colIndex}`) || 'desc';
+            dir = dir === 'asc' ? 'desc' : 'asc';
+            table.setAttribute(`data-sort-dir-${colIndex}`, dir);
+
+            rows.sort((a, b) => {
+                let cellA = a.children[colIndex];
+                let cellB = b.children[colIndex];
+                let valA = cellA.getAttribute('data-val') !== null ? cellA.getAttribute('data-val') : cellA.innerText;
+                let valB = cellB.getAttribute('data-val') !== null ? cellB.getAttribute('data-val') : cellB.innerText;
+
+                if (type === 'num') {
+                    valA = parseInt(valA) || 0;
+                    valB = parseInt(valB) || 0;
+                } else if (type === 'float') {
+                    valA = parseFloat(valA) || 0;
+                    valB = parseFloat(valB) || 0;
+                } else {
+                    valA = valA.toString().toLowerCase();
+                    valB = valB.toString().toLowerCase();
+                }
+
+                if (valA < valB) return dir === 'asc' ? -1 : 1;
+                if (valA > valB) return dir === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+            
+            // Visual feedback for sorted column
+            table.querySelectorAll('th').forEach(th => th.classList.remove('sorted-asc', 'sorted-desc'));
+            table.querySelectorAll('th')[colIndex].classList.add(dir === 'asc' ? 'sorted-asc' : 'sorted-desc');
+        }
+
+        function filterTables() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const tables = document.querySelectorAll('table');
+
+            tables.forEach(table => {
+                const tr = table.getElementsByTagName('tr');
+                for (let i = 1; i < tr.length; i++) {
+                    let td = tr[i].getElementsByTagName('td')[0];
+                    if (td) {
+                        const txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].classList.remove('hidden');
+                        } else {
+                            tr[i].classList.add('hidden');
+                        }
+                    }
+                }
+            });
+        }
+
+        function calculateSwingSpeed() {
+            const speedInput = document.getElementById('calcSpeed').value;
+            const dexInput = document.getElementById('calcDex').value;
+            const minDmgInput = document.getElementById('calcMinDmg').value;
+            const maxDmgInput = document.getElementById('calcMaxDmg').value;
+            const resultEl = document.getElementById('calcResult');
+
+            let speed = parseFloat(speedInput) || 0;
+            let dex = parseFloat(dexInput) || 0;
+            let minDmg = parseInt(minDmgInput) || 0;
+            let maxDmg = parseInt(maxDmgInput) || 0;
+
+            if (speed <= 0) {
+                resultEl.innerText = "0.00s";
+                return;
+            }
+
+            const speedMultiplier = 0.65; // From SphereConfiguration.cs
+            let speedInSeconds = (speed / 100.0) * speedMultiplier;
+
+            // Dex calculation logic from SphereCombat.cs
+            let bonusDex = Math.max(-50, Math.min(25, dex - 100)); // clamp(dex - 100, -50, 25)
+
+            if (bonusDex > 0) {
+                speedInSeconds -= speedInSeconds * bonusDex * 0.008;
+            } else if (bonusDex < 0) {
+                speedInSeconds -= speedInSeconds * bonusDex * 0.004;
+            }
+
+            // Ensure we don't go below minimum reasonable swing speed (0.25s is the normal cap)
+            speedInSeconds = Math.max(0.25, speedInSeconds);
+            const finalSwingStr = speedInSeconds.toFixed(2) + 's';
+
+            resultEl.innerText = finalSwingStr;
+
+            // Update row if global selected state exists
+            if (window.currentActiveRowId) {
+                const tr = document.getElementById(window.currentActiveRowId);
+                if (tr) {
+                    const minCell = tr.querySelector('.cell-newmin');
+                    const maxCell = tr.querySelector('.cell-newmax');
+                    const swingCell = tr.querySelector('.cell-newswing');
+                    const speedCell = tr.querySelector('.cell-speed .stat-sphere');
+
+                    if (minCell) { minCell.innerText = minDmg; minCell.setAttribute('data-val', minDmg); minCell.classList.add('calc-new-stat'); }
+                    if (maxCell) { maxCell.innerText = maxDmg; maxCell.setAttribute('data-val', maxDmg); maxCell.classList.add('calc-new-stat'); }
+                    if (swingCell) { swingCell.innerText = finalSwingStr; swingCell.setAttribute('data-val', speedInSeconds); swingCell.classList.add('calc-new-stat'); }
+                    if (speedCell) { speedCell.innerText = speed; }
+
+                    // We also update the specific parent's td attribute for speed sorting
+                    const speedTd = tr.querySelector('.cell-speed');
+                    if (speedTd) {
+                        speedTd.setAttribute('data-val', speed);
+                        speedTd.classList.add('calc-new-stat');
+                    }
+
+                    // SAVE TO LOCAL STORAGE
+                    const currentName = window.currentActiveWeaponName;
+                    if (currentName) {
+                        localStorage.setItem('weapon_tune_' + currentName, JSON.stringify({
+                            speed: speed,
+                            minDmg: minDmg,
+                            maxDmg: maxDmg
+                        }));
+                    }
+                }
+            }
+        }
+
+        function fillCalculator(speed, name, minDmg, maxDmg, trElement, oldMin, oldMax) {
+            const speedInput = document.getElementById('calcSpeed');
+            const minDmgInput = document.getElementById('calcMinDmg');
+            const maxDmgInput = document.getElementById('calcMaxDmg');
+
+            // Look up row ID from the element passed
+            window.currentActiveRowId = trElement ? trElement.id : '';
+            window.currentActiveWeaponName = name;
+
+            let oldMinStr = oldMin !== undefined ? oldMin : 'N/A';
+            let oldMaxStr = oldMax !== undefined ? oldMax : 'N/A';
+
+            // Set base reference spans with internal classes for easy regex parsing on reset
+            document.getElementById('refSpeed').innerHTML = `(Original: <span class="ref-base-val">${speed}</span>)`;
+            document.getElementById('refMin').innerHTML = `(Base: <span class="ref-base-val">${minDmg}</span> | Old: ${oldMinStr})`;
+            document.getElementById('refMax').innerHTML = `(Base: <span class="ref-base-val">${maxDmg}</span> | Old: ${oldMaxStr})`;
+
+            // Optional: If this row has been edited already, pull the LATEST data from cells, 
+            // instead of resetting to base default json array stats every click.
+            const minCell = trElement ? trElement.querySelector('.cell-newmin') : null;
+            const maxCell = trElement ? trElement.querySelector('.cell-newmax') : null;
+            const speedCellTd = trElement ? trElement.querySelector('.cell-speed') : null;
+
+            if (minCell && maxCell && speedCellTd) {
+                minDmgInput.value = minCell.getAttribute('data-val');
+                maxDmgInput.value = maxCell.getAttribute('data-val');
+                speedInput.value = speedCellTd.getAttribute('data-val');
+            } else {
+                minDmgInput.value = minDmg || 0;
+                maxDmgInput.value = maxDmg || 0;
+                speedInput.value = speed || 0;
+            }
+
+            document.getElementById('selectedWeaponDisplay').classList.remove('hidden');
+            document.getElementById('selectedWeaponName').innerText = name;
+
+            // Show the confirmation and reset button
+            document.getElementById('calcConfirmBtn').classList.remove('hidden');
+            document.getElementById('calcResetBtn').classList.remove('hidden');
+
+            calculateSwingSpeed();
+
+            // Smooth scroll up to the calculator 
+            document.querySelector('.calculator-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetWeapon() {
+            if (!window.currentActiveWeaponName) return;
+
+            // Remove from local storage
+            localStorage.removeItem('weapon_tune_' + window.currentActiveWeaponName);
+
+            // Locate the row and remove new stat classes/values
+            if (window.currentActiveRowId) {
+                const tr = document.getElementById(window.currentActiveRowId);
+                if (tr) {
+                    const defaultMinMatch = document.getElementById('refMin').querySelector('.ref-base-val');
+                    const defaultMaxMatch = document.getElementById('refMax').querySelector('.ref-base-val');
+                    const defaultSpeedMatch = document.getElementById('refSpeed').querySelector('.ref-base-val');
+
+                    if (defaultMinMatch && defaultMaxMatch && defaultSpeedMatch) {
+                        const defMin = parseInt(defaultMinMatch.innerText);
+                        const defMax = parseInt(defaultMaxMatch.innerText);
+                        const defSpeed = parseInt(defaultSpeedMatch.innerText);
+
+                        // Overwrite calculator inputs back to un-tuned defaults
+                        document.getElementById('calcMinDmg').value = defMin;
+                        document.getElementById('calcMaxDmg').value = defMax;
+                        document.getElementById('calcSpeed').value = defSpeed;
+
+                        // Force a swing speed update which will push the defaults back into the tr columns
+                        calculateSwingSpeed();
+
+                        // Clear the cyan color classes because it's no longer customized
+                        tr.querySelector('.cell-newmin').classList.remove('calc-new-stat');
+                        tr.querySelector('.cell-newmax').classList.remove('calc-new-stat');
+                        tr.querySelector('.cell-newswing').classList.remove('calc-new-stat');
+                        tr.querySelector('.cell-speed').classList.remove('calc-new-stat');
+                    }
+                }
+            }
+        }
+
+        function scrollToWeapon() {
+            if (window.currentActiveRowId) {
+                const tr = document.getElementById(window.currentActiveRowId);
+                if (tr) {
+                    tr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                    const originalBg = tr.style.backgroundColor;
+                    tr.style.backgroundColor = 'rgba(255, 42, 42, 0.2)';
+                    setTimeout(() => {
+                        tr.style.backgroundColor = originalBg;
+                    }, 1500);
+                }
+            }
+        }
+
+        window.onload = () => {
+            renderDash();
+            calculateSwingSpeed(); // Initialize calculator with default values
+        };
+    </script>
+
+</body>
+
+</html>
